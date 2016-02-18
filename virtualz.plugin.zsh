@@ -167,7 +167,10 @@ _virtualz-help () {
 
 # Completion support
 _vz () {
-	local -a commands=( $(_virtualz_commands) )
+	local -a commands
+	for command in $(_virtualz_commands) ; do
+		commands=( "${commands[@]}" "${command}:${_virtualz_cmd[${command}]}" )
+	done
 
 	typeset -A opt_args
 	local state
