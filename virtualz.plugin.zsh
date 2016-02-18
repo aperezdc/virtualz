@@ -8,6 +8,8 @@
 
 : ${VIRTUALZ_HOME:=${HOME}/.virtualenvs}
 
+declare -A _virtualz_cmd
+
 vz () {
 	if [[ $# -eq 0 ]] ; then
 		vz help
@@ -24,6 +26,7 @@ vz () {
 	fi
 }
 
+_virtualz_cmd[activate]='Activate a virtualenv'
 _virtualz-activate () {
 	if [[ $# -ne 1 ]] ; then
 		echo 'No virtualenv specified.' 1>&2
@@ -53,6 +56,7 @@ _virtualz-activate () {
 	fi
 }
 
+_virtualz_cmd[deactivate]='Deactivate the active virtualenv'
 _virtualz-deactivate () {
 	if [[ ${VIRTUAL_ENV:+set} != set ]] ; then
 		echo 'No virtualv is active.' 1>&2
@@ -78,6 +82,7 @@ _virtualz-deactivate () {
 	unset VIRTUAL_ENV VIRTUAL_ENV_NAME
 }
 
+_virtualz_cmd[new]='Create a new virtualenv'
 _virtualz-new () {
 	if [[ $# -lt 1 ]] ; then
 		echo 'No virtualenv specified.' 1>&2
@@ -99,6 +104,7 @@ _virtualz-new () {
 	fi
 }
 
+_virtualz_cmd[rm]='Delete a virtualenv'
 _virtualz-rm () {
 	if [[ $# -lt 1 ]] ; then
 		echo 'No virtualenv specified.' 1>&2
@@ -118,6 +124,7 @@ _virtualz-rm () {
 	rm -rf "${venv_path}"
 }
 
+_virtualz_cmd[ls]='List available virtualenvs'
 _virtualz-ls () {
 	if [[ -d ${VIRTUALZ_HOME} ]] ; then
 		pushd -q "${VIRTUALZ_HOME}"
@@ -128,6 +135,7 @@ _virtualz-ls () {
 	fi
 }
 
+_virtualz_cmd[cd]='Change to the directory of the active virtualenv'
 _virtualz-cd () {
 	if [[ ${VIRTUAL_ENV:+set} != set ]] ; then
 		echo 'No virtualv is active.' 1>&2
@@ -142,6 +150,7 @@ _virtualz_commands () {
 	done
 }
 
+_virtualz_cmd[help]='Show usage information'
 _virtualz-help () {
 	cat <<-EOF
 	Usage: vz <command> [<args>]
@@ -150,7 +159,7 @@ _virtualz-help () {
 
 	EOF
 	for command in $(_virtualz_commands) ; do
-		echo "  - ${command}"
+		printf "  %-12s %s\n" "${command}" "${_virtualz_cmd[${command}]}"
 	done
 	echo
 }
