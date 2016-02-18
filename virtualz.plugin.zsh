@@ -136,6 +136,12 @@ virtualz-cd () {
 	cd "${VIRTUAL_ENV}"
 }
 
+_virtualz-commands () {
+	for fname in $(typeset +fm 'virtualz-*') ; do
+		echo "${fname#virtualz-}"
+	done
+}
+
 virtualz-help () {
 	cat <<-EOF
 	Usage: vz <command> [<args>]
@@ -143,7 +149,40 @@ virtualz-help () {
 	Available commands:
 
 	EOF
-	while read -r fname ; do
-		echo "  ${fname#virtualz-}"
-	done < <( typeset +fm 'virtualz-*' )
+	for command in $(_virtualz-commands) ; do
+		echo "  - ${command}"
+	done
+	echo
 }
+
+
+# Completion support
+_vz () {
+	local -a commands=( $(_virtualz-commands) )
+
+	typeset -A opt_args
+	local state
+
+	_arguments \
+		"1: :{_describe 'command' commands}" \
+		'*:: :->args'
+
+	case ${words[1]} in
+		activate | rm)
+			local -a virtualenvs=( $(virtualz-ls) )
+			_arguments "1: :{_describe 'virtualenv' virtualenvs}"
+			;;
+		new)
+			if typeset -fz _virtualenv ; then
+				_arguments \
+					'1:virtualenv name:' \
+					'*:virtualenv args:_virtualenv'
+			else
+				_arguments \
+					'1:virtualenv name:' \
+					'*:virtualenv args:'
+			fi
+			;;
+	esac
+}
+compdef _vz vz
