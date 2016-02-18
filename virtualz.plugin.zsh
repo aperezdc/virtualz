@@ -27,7 +27,7 @@ vz () {
 }
 
 _virtualz_cmd[activate]='Activate a virtualenv'
-_virtualz-activate () {
+virtualz-activate () {
 	if [[ $# -ne 1 ]] ; then
 		echo 'No virtualenv specified.' 1>&2
 		return 1
@@ -41,7 +41,7 @@ _virtualz-activate () {
 
 	# If a virtualenv is in use, deactivate it first
 	if [[ ${VIRTUAL_ENV:+set} = set ]] ; then
-		_virtualz-deactivate
+		virtualz-deactivate
 	fi
 
 	VIRTUAL_ENV_NAME=$1
@@ -57,7 +57,7 @@ _virtualz-activate () {
 }
 
 _virtualz_cmd[deactivate]='Deactivate the active virtualenv'
-_virtualz-deactivate () {
+virtualz-deactivate () {
 	if [[ ${VIRTUAL_ENV:+set} != set ]] ; then
 		echo 'No virtualv is active.' 1>&2
 		return 1
@@ -97,7 +97,7 @@ _virtualz-new () {
 	local venv_status=$?
 
 	if [[ ${venv_status} -eq 0 && -d ${venv_path} ]] ; then
-		_virtualz-activate "${venv_name}"
+		virtualz-activate "${venv_name}"
 	else
 		echo "virtualenv returned status ${venv_status}" 1>&2
 		return ${venv_status}
@@ -105,7 +105,7 @@ _virtualz-new () {
 }
 
 _virtualz_cmd[rm]='Delete a virtualenv'
-_virtualz-rm () {
+virtualz-rm () {
 	if [[ $# -lt 1 ]] ; then
 		echo 'No virtualenv specified.' 1>&2
 		return 1
@@ -125,7 +125,7 @@ _virtualz-rm () {
 }
 
 _virtualz_cmd[ls]='List available virtualenvs'
-_virtualz-ls () {
+virtualz-ls () {
 	if [[ -d ${VIRTUALZ_HOME} ]] ; then
 		pushd -q "${VIRTUALZ_HOME}"
 		for item in */bin/python ; do
@@ -136,7 +136,7 @@ _virtualz-ls () {
 }
 
 _virtualz_cmd[cd]='Change to the directory of the active virtualenv'
-_virtualz-cd () {
+virtualz-cd () {
 	if [[ ${VIRTUAL_ENV:+set} != set ]] ; then
 		echo 'No virtualv is active.' 1>&2
 		return 1
@@ -144,14 +144,8 @@ _virtualz-cd () {
 	cd "${VIRTUAL_ENV}"
 }
 
-_virtualz-_command_completion () {
-	for cmd in ${(k)_virtualz_cmd[@]} ; do
-		echo "${cmd}:${_virtualz_cmd[${cmd}]}"
-	done
-}
-
 _virtualz_cmd[help]='Show usage information'
-_virtualz-help () {
+virtualz-help () {
 	cat <<-EOF
 	Usage: vz <command> [<args>]
 

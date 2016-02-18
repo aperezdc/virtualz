@@ -1,6 +1,10 @@
 #compdef vz
 
-IFS=$'\n' local -a vz_commands=( $( vz _command_completion ) )
+local -a vz_commands
+for cmd in ${(k)_virtualz_cmd[@]} ; do
+	vz_commands=( "${vz_commands[@]}" "${cmd}:${_virtualz_cmd[${cmd}]}" )
+done
+
 typeset -A opt_args
 local state
 
