@@ -144,9 +144,9 @@ _virtualz-cd () {
 	cd "${VIRTUAL_ENV}"
 }
 
-_virtualz_commands () {
-	for fname in $(typeset +fm '_virtualz-*') ; do
-		echo "${fname#_virtualz-}"
+_virtualz-_command_completion () {
+	for cmd in ${(k)_virtualz_cmd[@]} ; do
+		echo "${cmd}:${_virtualz_cmd[${cmd}]}"
 	done
 }
 
@@ -158,8 +158,8 @@ _virtualz-help () {
 	Available commands:
 
 	EOF
-	for command in $(_virtualz_commands) ; do
-		printf "  %-12s %s\n" "${command}" "${_virtualz_cmd[${command}]}"
+	for cmd in ${(k)_virtualz_cmd[@]} ; do
+		printf "  %-12s %s\n" "${cmd}" "${_virtualz_cmd[${cmd}]}"
 	done
 	echo
 }
@@ -167,22 +167,18 @@ _virtualz-help () {
 
 # Completion support
 _vz () {
-	local -a commands
-	for command in $(_virtualz_commands) ; do
-		commands=( "${commands[@]}" "${command}:${_virtualz_cmd[${command}]}" )
-	done
-
+	IFS=$'\n' local -a vz_commands=( $( vz _command_completion ) )
 	typeset -A opt_args
 	local state
 
 	_arguments \
-		"1: :{_describe 'command' commands}" \
+		"1: :{_describe 'command' vz_commands}" \
 		'*:: :->args'
 
 	case ${words[1]} in
 		activate | rm)
-			local -a virtualenvs=( $(_virtualz-ls) )
-			_arguments "1: :{_describe 'virtualenv' virtualenvs}"
+			local -a vz_virtualenvs=( $(vz ls) )
+			_arguments "1: :{_describe 'virtualenv' vz_virtualenvs}"
 			;;
 		new)
 			if typeset -fz _virtualenv ; then
