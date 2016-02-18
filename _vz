@@ -1,0 +1,27 @@
+#compdef vz
+
+IFS=$'\n' local -a vz_commands=( $( vz _command_completion ) )
+typeset -A opt_args
+local state
+
+_arguments \
+	"1: :{_describe 'command' vz_commands}" \
+	'*:: :->args'
+
+case ${words[1]} in
+	activate | rm)
+		local -a vz_virtualenvs=( $(vz ls) )
+		_arguments "1: :{_describe 'virtualenv' vz_virtualenvs}"
+		;;
+	new)
+		if typeset -fz _virtualenv ; then
+			_arguments \
+				'1:virtualenv name:' \
+				'*:virtualenv args:_virtualenv'
+		else
+			_arguments \
+				'1:virtualenv name:' \
+				'*:virtualenv args:'
+		fi
+		;;
+esac
