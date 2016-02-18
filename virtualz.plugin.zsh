@@ -14,7 +14,7 @@ vz () {
 		return
 	fi
 
-	local cmd=$1 fname="virtualz-$1"
+	local cmd=$1 fname="_virtualz-$1"
 	shift
 
 	if typeset -fz "${fname}" ; then
@@ -24,7 +24,7 @@ vz () {
 	fi
 }
 
-virtualz-activate () {
+_virtualz-activate () {
 	if [[ $# -ne 1 ]] ; then
 		echo 'No virtualenv specified.' 1>&2
 		return 1
@@ -38,7 +38,7 @@ virtualz-activate () {
 
 	# If a virtualenv is in use, deactivate it first
 	if [[ ${VIRTUAL_ENV:+set} = set ]] ; then
-		virtualz-deactivate
+		_virtualz-deactivate
 	fi
 
 	VIRTUAL_ENV_NAME=$1
@@ -53,7 +53,7 @@ virtualz-activate () {
 	fi
 }
 
-virtualz-deactivate () {
+_virtualz-deactivate () {
 	if [[ ${VIRTUAL_ENV:+set} != set ]] ; then
 		echo 'No virtualv is active.' 1>&2
 		return 1
@@ -78,7 +78,7 @@ virtualz-deactivate () {
 	unset VIRTUAL_ENV VIRTUAL_ENV_NAME
 }
 
-virtualz-new () {
+_virtualz-new () {
 	if [[ $# -lt 1 ]] ; then
 		echo 'No virtualenv specified.' 1>&2
 		return 1
@@ -92,14 +92,14 @@ virtualz-new () {
 	local venv_status=$?
 
 	if [[ ${venv_status} -eq 0 && -d ${venv_path} ]] ; then
-		virtualz-activate "${venv_name}"
+		_virtualz-activate "${venv_name}"
 	else
 		echo "virtualenv returned status ${venv_status}" 1>&2
 		return ${venv_status}
 	fi
 }
 
-virtualz-rm () {
+_virtualz-rm () {
 	if [[ $# -lt 1 ]] ; then
 		echo 'No virtualenv specified.' 1>&2
 		return 1
@@ -118,7 +118,7 @@ virtualz-rm () {
 	rm -rf "${venv_path}"
 }
 
-virtualz-ls () {
+_virtualz-ls () {
 	if [[ -d ${VIRTUALZ_HOME} ]] ; then
 		pushd -q "${VIRTUALZ_HOME}"
 		for item in */bin/python ; do
@@ -128,7 +128,7 @@ virtualz-ls () {
 	fi
 }
 
-virtualz-cd () {
+_virtualz-cd () {
 	if [[ ${VIRTUAL_ENV:+set} != set ]] ; then
 		echo 'No virtualv is active.' 1>&2
 		return 1
@@ -136,20 +136,20 @@ virtualz-cd () {
 	cd "${VIRTUAL_ENV}"
 }
 
-_virtualz-commands () {
-	for fname in $(typeset +fm 'virtualz-*') ; do
-		echo "${fname#virtualz-}"
+_virtualz_commands () {
+	for fname in $(typeset +fm '_virtualz-*') ; do
+		echo "${fname#_virtualz-}"
 	done
 }
 
-virtualz-help () {
+_virtualz-help () {
 	cat <<-EOF
 	Usage: vz <command> [<args>]
 
 	Available commands:
 
 	EOF
-	for command in $(_virtualz-commands) ; do
+	for command in $(_virtualz_commands) ; do
 		echo "  - ${command}"
 	done
 	echo
@@ -158,7 +158,7 @@ virtualz-help () {
 
 # Completion support
 _vz () {
-	local -a commands=( $(_virtualz-commands) )
+	local -a commands=( $(_virtualz_commands) )
 
 	typeset -A opt_args
 	local state
@@ -169,7 +169,7 @@ _vz () {
 
 	case ${words[1]} in
 		activate | rm)
-			local -a virtualenvs=( $(virtualz-ls) )
+			local -a virtualenvs=( $(_virtualz-ls) )
 			_arguments "1: :{_describe 'virtualenv' virtualenvs}"
 			;;
 		new)
