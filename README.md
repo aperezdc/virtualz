@@ -28,3 +28,17 @@ With [zgen](https://github.com/tarjoilija/zgen), add the following to your `.zsh
 ```sh
 zgen load aperezdc/virtualz
 ```
+
+
+### Virtualenv name in the prompt
+
+When a virtualenv is active, the following variables are defined:
+
+- `VIRTUAL_ENV` contains the full path to the active environment.
+- `VIRTUAL_ENV_NAME` contains the name of the active environment.
+
+For example, the following will prepend the name of the current virtualenv to your existing prompt, but only if there's an environment active:
+
+```sh
+PROMPT='${VIRTUAL_ENV_NAME:+${VIRTUAL_ENV_NAME} }${PROMPT}'
+```
