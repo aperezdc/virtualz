@@ -11,7 +11,7 @@
 declare -A _virtualz_cmd
 
 vz () {
-	if [[ $# -eq 0 ]] ; then
+	if [[ $# -eq 0 || $1 = --help || $1 == -h ]] ; then
 		vz help
 		return
 	fi
