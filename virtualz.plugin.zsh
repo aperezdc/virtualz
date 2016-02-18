@@ -8,7 +8,7 @@
 
 : ${VIRTUALZ_HOME:=${HOME}/.virtualenvs}
 
-declare -A _virtualz_cmd
+typeset -gA _virtualz_cmd
 
 vz () {
 	if [[ $# -eq 0 || $1 = --help || $1 == -h ]] ; then
@@ -163,3 +163,5 @@ _virtualz-help () {
 	done
 	echo
 }
+
+readonly _virtualz_cmd
