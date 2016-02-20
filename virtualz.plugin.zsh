@@ -16,7 +16,7 @@ vz () {
 		return
 	fi
 
-	local cmd=$1 fname="_virtualz-$1"
+	local cmd=$1 fname="virtualz-$1"
 	shift
 
 	if typeset -fz "${fname}" ; then
