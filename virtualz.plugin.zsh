@@ -83,7 +83,7 @@ virtualz-deactivate () {
 }
 
 _virtualz_cmd[new]='Create a new virtualenv'
-_virtualz-new () {
+virtualz-new () {
 	if [[ $# -lt 1 ]] ; then
 		echo 'No virtualenv specified.' 1>&2
 		return 1
