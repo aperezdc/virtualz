@@ -18,14 +18,16 @@ case ${words[1]} in
 		_arguments "1: :{_describe 'virtualenv' vz_virtualenvs}"
 		;;
 	new)
-		if typeset -fz _virtualenv ; then
-			_arguments \
-				'1:virtualenv name:' \
-				'*:virtualenv args:_virtualenv'
-		else
-			_arguments \
-				'1:virtualenv name:' \
-				'*:virtualenv args:'
-		fi
+		_arguments \
+			'1:virtualenv name:' \
+			'(-v --verbose)'{-v,--verbose}'[Increase verbosity]' \
+			'(-q --quiet)'{-q,--quiet}'[Decrease verbosity]' \
+			'(-p --python)'{-p,--python=-}'[The Python interpreter to use]:files:_files' \
+			'--system-site-packages[Give the virtual environment access to the global site-packages]' \
+			'--always-copy[Always copy files rather than symlinking]' \
+			'--unzip-setuptools[Unzip Setuptools when installing it]' \
+			'--no-setuptools[Do not install setuptools in the new virtualenv]' \
+			'--no-pip[Do not install pip in the new virtualenv]' \
+			'--no-wheel[Do not install wheel in the new virtualenv]'
 		;;
 esac
