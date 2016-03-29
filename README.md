@@ -18,6 +18,22 @@ vz rm myvirtualenv
 vz rm othervirtualenv
 ```
 
+### Additional Options
+
+When creating a new environment, the additional parameters passed to the `vz
+new` command are passed down to the `virtualenv` command. For example, this
+can be used to specify which `python` executable to use:
+
+```
+vz new env-with-pypy -p /usr/bin/pypy
+```
+
+or to allow usage of packages installed system-wide:
+
+```
+vz new with-system-pkgs --system-site-packages
+```
+
 
 ## Installation & Setup
 
