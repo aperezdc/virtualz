@@ -59,7 +59,7 @@ virtualz-activate () {
 _virtualz_cmd[deactivate]='Deactivate the active virtualenv'
 virtualz-deactivate () {
 	if [[ ${VIRTUAL_ENV:+set} != set ]] ; then
-		echo 'No virtualv is active.' 1>&2
+		echo 'No virtualenv is active.' 1>&2
 		return 1
 	fi
 
@@ -138,7 +138,7 @@ virtualz-ls () {
 _virtualz_cmd[cd]='Change to the directory of the active virtualenv'
 virtualz-cd () {
 	if [[ ${VIRTUAL_ENV:+set} != set ]] ; then
-		echo 'No virtualv is active.' 1>&2
+		echo 'No virtualenv is active.' 1>&2
 		return 1
 	fi
 	cd "${VIRTUAL_ENV}"
