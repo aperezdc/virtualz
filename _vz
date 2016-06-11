@@ -1,20 +1,22 @@
 #compdef vz
 
 local -a vz_commands
-for cmd in ${(k)_virtualz_cmd[@]} ; do
-	vz_commands=( "${vz_commands[@]}" "${cmd}:${_virtualz_cmd[${cmd}]}" )
+for file in "${_virtualz_dir}"/doc/cmd-*.txt ; do
+	local cmd=${file#*/cmd-}
+	vz_commands+=( "${cmd%.txt}:$(read -re < "${file}")" )
 done
+local -a vz_virtualenvs=( $(vz ls) )
 
 typeset -A opt_args
 local state
 
 _arguments \
 	"1: :{_describe 'command' vz_commands}" \
+	"1: :{_describe 'virtualenv' vz_virtualenvs}" \
 	'*:: :->args'
 
 case ${words[1]} in
 	activate | rm)
-		local -a vz_virtualenvs=( $(vz ls) )
 		_arguments "1: :{_describe 'virtualenv' vz_virtualenvs}"
 		;;
 	new)
