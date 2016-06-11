@@ -1,0 +1,15 @@
+Environment Variables
+=====================
+
+VirtualZ uses the following environtment variables:
+
+* VIRTUALZ_HOME: Path to the home directory where virtualenvs are kept.
+  (Use "vz help homedir" for more information.)
+
+* VIRTUAL_ENV: Path to the active virtualenv. Undefined if no virtualenv
+  is active.
+
+* VIRTUAL_END_NAME: Name of the active virtualenv. Undefined if no virtualenv
+  is active. This is always the last path component of ${VIRTUAL_ENV}, with
+  trailing slashes removed, and it is provided as a convenience.
+
