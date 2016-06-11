@@ -25,6 +25,8 @@ vz () {
 		else
 			"${fname}" "$@"
 		fi
+	elif [[ -d ${VIRTUALZ_HOME}/${cmd} ]] ; then
+		vz activate "${cmd}"
 	else
 		echo "The subcommand '${cmd}' is not defined" 1>&2
 	fi
