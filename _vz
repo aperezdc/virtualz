@@ -11,7 +11,7 @@ typeset -A opt_args
 local state
 
 _arguments \
-	"1: :{_describe 'command' vz_commands} :{_describe 'virtualenv' vz_virtualenvs}" \
+	"1: :{_describe 'command' vz_commands -- 'virtualenv' vz_virtualenvs}" \
 	'*:: :->args'
 
 case ${words[1]} in
