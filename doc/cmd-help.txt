@@ -1,0 +1,11 @@
+Shows usage information
+Usage: vz help [<topic> | <command>]
+
+Provides help on VirtualZ and usage instructions of each of its subcommands.
+The optional argument may be either a command name.
+
+  vz help commands       Obtain a list of available commands.
+  vz help topics         Obtain a list of available help topics.
+  vz help <command>      Obtain help about a given command.
+  vz help <topic>        Obtain help about a given topic.
+

@@ -8,7 +8,7 @@
 
 : ${VIRTUALZ_HOME:=${HOME}/.virtualenvs}
 
-typeset -gA _virtualz_cmd
+typeset -gr _virtualz_dir=$(realpath "$(dirname "$0")")
 
 vz () {
 	if [[ $# -eq 0 || $1 = --help || $1 == -h ]] ; then
@@ -20,13 +20,16 @@ vz () {
 	shift
 
 	if typeset -fz "${fname}" ; then
-		"${fname}" "$@"
+		if [[ $1 == --help || $1 = -h ]] ; then
+			vz help "${cmd}"
+		else
+			"${fname}" "$@"
+		fi
 	else
 		echo "The subcommand '${cmd}' is not defined" 1>&2
 	fi
 }
 
-_virtualz_cmd[activate]='Activate a virtualenv'
 virtualz-activate () {
 	if [[ $# -ne 1 ]] ; then
 		echo 'No virtualenv specified.' 1>&2
@@ -56,7 +59,6 @@ virtualz-activate () {
 	fi
 }
 
-_virtualz_cmd[deactivate]='Deactivate the active virtualenv'
 virtualz-deactivate () {
 	if [[ ${VIRTUAL_ENV:+set} != set ]] ; then
 		echo 'No virtualenv is active.' 1>&2
@@ -82,7 +84,6 @@ virtualz-deactivate () {
 	unset VIRTUAL_ENV VIRTUAL_ENV_NAME
 }
 
-_virtualz_cmd[new]='Create a new virtualenv'
 virtualz-new () {
 	if [[ $# -lt 1 ]] ; then
 		echo 'No virtualenv specified.' 1>&2
@@ -104,7 +105,6 @@ virtualz-new () {
 	fi
 }
 
-_virtualz_cmd[rm]='Delete a virtualenv'
 virtualz-rm () {
 	if [[ $# -lt 1 ]] ; then
 		echo 'No virtualenv specified.' 1>&2
@@ -124,7 +124,6 @@ virtualz-rm () {
 	rm -rf "${venv_path}"
 }
 
-_virtualz_cmd[ls]='List available virtualenvs'
 virtualz-ls () {
 	if [[ -d ${VIRTUALZ_HOME} ]] ; then
 		pushd -q "${VIRTUALZ_HOME}"
@@ -135,7 +134,6 @@ virtualz-ls () {
 	fi
 }
 
-_virtualz_cmd[cd]='Change to the directory of the active virtualenv'
 virtualz-cd () {
 	if [[ ${VIRTUAL_ENV:+set} != set ]] ; then
 		echo 'No virtualenv is active.' 1>&2
@@ -144,18 +142,43 @@ virtualz-cd () {
 	cd "${VIRTUAL_ENV}"
 }
 
-_virtualz_cmd[help]='Show usage information'
 virtualz-help () {
-	cat <<-EOF
-	Usage: vz <command> [<args>]
-
-	Available commands:
-
-	EOF
-	for cmd in ${(k)_virtualz_cmd[@]} ; do
-		printf "  %-12s %s\n" "${cmd}" "${_virtualz_cmd[${cmd}]}"
-	done
-	echo
+	if [[ $# -eq 0 || $1 = commands ]] ; then
+		if [[ $# -eq 0 ]] ; then
+			echo 'Usage: vz <command> [<args>]'
+			echo
+		fi
+		echo 'Available commands:'
+		echo
+		for file in "${_virtualz_dir}"/doc/cmd-*.txt ; do
+			local cmd=${file#*/cmd-}
+			printf "  %-12s " "${cmd%.txt}"
+			read -re < "${file}"
+		done
+		echo
+	elif [[ $# -eq 1 && $1 = topics ]] ; then
+		echo 'Available topics:'
+		echo
+		for file in "${_virtualz_dir}"/doc/topic-*.txt ; do
+			local topic=${file#*/topic-}
+			printf "  %-12s " "${topic%.txt}"
+			read -re < "${file}"
+		done
+		echo
+	elif [[ $# -eq 1 ]] ; then
+		if [[ -r ${_virtualz_dir}/doc/cmd-$1.txt ]] ; then
+			cat "${_virtualz_dir}/doc/cmd-$1.txt"
+		elif [[ -r ${_virtualz_dir}/doc/topic-$1.txt ]] ; then
+			cat "${_virtualz_dir}/doc/topic-$1.txt"
+		else
+			cat 1>&2 <<-EOF
+			No such topic or command: $1
+			Tip: use "vz help topics" for a list topics, or "vz help commands" for a list of commands.
+			EOF
+			return 1
+		fi
+	else
+		echo 'Usage: vz <command> [<args>]' 1>&2
+		return 1
+	fi
 }
-
-readonly _virtualz_cmd

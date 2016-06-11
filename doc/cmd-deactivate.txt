@@ -1,0 +1,7 @@
+Deactivate the current virtualenv
+Usage: vz deactivate
+
+  Deactivates the currently active virtualenv. This will unset ${VIRTUAL_ENV}
+  and ${VIRTUAL_ENV_NAME}. Also, the "bin/" subdirectory of the virtualenv
+  will be removed from ${PATH}.
+

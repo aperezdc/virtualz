@@ -1,0 +1,14 @@
+Create a new virtualenv
+Usage: vz new <virtualenv> [<options>]
+
+Creates a new virtualenv. Only the <virtualenv> name is required. The
+additional <options> are passed down to "virtualenv", and have the same
+the same meaning as when passed to it. Note that not all the options
+recognized by "virtualenv" are accepted; options other than the following
+are forbidden:
+
+  --always-copy, --no-pip, --no-setuptools, --no-wheel, -p, --python,
+  -q, --quiet, --system-site-packages, --unzip-setuptools, -v, --verbose
+
+Hint: Use "virtualenv --help" for information on the options listed above.
+

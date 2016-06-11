@@ -1,0 +1,15 @@
+The VirtualZ home directory
+===========================
+
+Each virtualenv is stored in a subdirectory of the home directory. The
+variable ${VIRTUALZ_HOME} defines the path to the home directory. If not
+overriden, its default value is "~/.virtualenvs". To configure a custom
+path, define the variable in your "~/.zshrc":
+
+  VIRTUALZ_HOME=/path/to/virtualenvs
+
+The variable does not need to be exported, and it will be honored regardless
+of whether it has been defined before or after sourcing VirtualZ. This means
+that you can redefine ${VIRTUALZ_HOME} from an interactive shell, but note
+that setting the home directory while a virtualenv is active is unsupported.
+
