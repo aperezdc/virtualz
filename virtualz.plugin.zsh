@@ -8,7 +8,7 @@
 
 : ${VIRTUALZ_HOME:=${HOME}/.virtualenvs}
 
-typeset -gr _virtualz_dir=$(realpath "$(dirname "$0")")
+typeset -gr _virtualz_dir=${0:A}
 
 vz () {
 	if [[ $# -eq 0 || $1 = --help || $1 == -h ]] ; then
