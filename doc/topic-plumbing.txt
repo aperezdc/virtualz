@@ -1,0 +1,14 @@
+Plumbing Commands
+=================
+
+VirtualZ includes a few commands which are “hidden”: they do not show in
+the output of “vz help” and are not offered as candidates for completion.
+These commands are intended to be used as an aid to write scripts which
+make use of VirtualZ. All the commands are prefixed with an underscore.
+
+_exists <name>
+--------------
+
+Checks whether a virtualenv “<name>” exists. The exit status is non-zero
+if the virtualenv is missing.
+
