@@ -1,6 +1,9 @@
 # VirtualZ
 
-A [Z shell](http://zsh.org) wrapper for Ian Bicking's [virtualenv](https://virtualenv.pypa.io/en/latest/), loosely based on Adam Brenecki's [virtualfish](https://github.com/adambrenecki) for the [Fish shell](http://fishshell.com).
+A [Z shell](http://zsh.org) wrapper for Ian Bicking's
+[virtualenv](https://virtualenv.pypa.io/en/latest/), loosely based on Adam
+Brenecki's [virtualfish](https://github.com/adambrenecki/virtualfish) for the
+[Fish shell](http://fishshell.com).
 
 
 ## Quickstart
