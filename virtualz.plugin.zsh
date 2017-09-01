@@ -136,6 +136,7 @@ virtualz-ls () {
 	fi
 }
 
+
 virtualz-_exists () {
 	if [[ $# -lt 1 ]] ; then
 		echo 'No virtualenv specified.' 1>&2
@@ -150,6 +151,14 @@ virtualz-cd () {
 		return 1
 	fi
 	cd "${VIRTUAL_ENV}"
+}
+
+virtualz-current() { 
+	if [[ ${VIRTUAL_ENV:+set} != set ]] ; then
+		echo 'No virtualenv is active.' 1>&2
+		return 1
+	fi
+	echo "${VIRTUAL_ENV_NAME}"
 }
 
 virtualz-help () {
