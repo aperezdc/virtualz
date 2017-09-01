@@ -136,7 +136,6 @@ virtualz-ls () {
 	fi
 }
 
-
 virtualz-_exists () {
 	if [[ $# -lt 1 ]] ; then
 		echo 'No virtualenv specified.' 1>&2
