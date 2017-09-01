@@ -152,7 +152,7 @@ virtualz-cd () {
 	cd "${VIRTUAL_ENV}"
 }
 
-virtualz-current() { 
+virtualz-current () { 
 	if [[ ${VIRTUAL_ENV:+set} != set ]] ; then
 		echo 'No virtualenv is active.' 1>&2
 		return 1
