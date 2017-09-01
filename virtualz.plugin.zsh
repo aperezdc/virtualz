@@ -29,6 +29,7 @@ vz () {
 		vz activate "${cmd}"
 	else
 		echo "The subcommand '${cmd}' is not defined" 1>&2
+		return 1
 	fi
 }
 
