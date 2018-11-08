@@ -97,7 +97,7 @@ virtualz-new () {
 	local venv_path="${VIRTUALZ_HOME}/${venv_name}"
 	shift
 
-	virtualenv "$@" "${venv_path}"
+	virtualz-venv "$@" "${venv_path}"
 	local venv_status=$?
 
 	if [[ ${venv_status} -eq 0 && -d ${venv_path} ]] ; then
@@ -200,4 +200,42 @@ virtualz-help () {
 		echo 'Usage: vz <command> [<args>]' 1>&2
 		return 1
 	fi
+}
+
+virtualz-venv () {
+	emulate -L zsh
+
+	# In general, a versioned command corresponding to Python 3 is preferred.
+	# Try to choose the most likely binary that gives us what we want:
+	#
+	#   - Many systems have versioned "virtualenv2" and/or "virtualenv3".
+	#   - A few systems have versioned "virtualenv-2" and/or "virtualenv-3".
+	#   - Some systems have a plain "virtualenv" program, unversioned, which
+	#     can be either Python 2 or Python 3.
+	#
+	local -a try_venv=(
+		virtualenv3
+		virtualenv-3
+		virtualenv
+		virtualenv2
+		virtualenv-2
+	)
+
+	if [[ -n ${VIRTUALZ_VIRTUALENV:-} ]] ; then
+		try_venv=( "${VIRTUALZ_VIRTUALENV}" "${try_venv[@]}" )
+	fi
+
+	local venv_cmd
+	for venv_cmd in "${try_venv[@]}" ; do
+		local venv_cmd_path=$(builtin whence -p "${venv_cmd}")
+		if [[ -x ${venv_cmd_path} ]] ; then
+			echo "Using virtualenv '${venv_cmd_path}'" 1>&2
+			local -i retval=0
+			"${venv_cmd_path}" "$@" || retval=$?
+			return ${retval}
+		fi
+	done
+
+	echo 'No virtualenv command found.' 1>&2
+	return 1
 }
