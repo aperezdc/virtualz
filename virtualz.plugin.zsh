@@ -205,8 +205,8 @@ virtualz-help () {
 virtualz-_detect () {
 	emulate -L zsh
 
-	# Is _virtualz-venv already defined? Note that passing
-	# -f/--force will remove the function and try anyway.
+	# Is _virtualz-venv already defined? Note that passing -f/--force
+	# will remove the command array and run the detection again.
 	#
 	if [[ ${#_virtualz_venv_cmd[@]} -gt 0 ]] ; then
 		if [[ $# -eq 1 && ( $1 = -f || $1 = --force ) ]] ; then
@@ -229,8 +229,6 @@ virtualz-_detect () {
 		python_version=$("${python}" -c 'import sys; sys.stdout.write(sys.version[0])')
 		[[ ${python_version} -ge 3 ]] || continue
 
-		# Define the helper function, this is eval'd to make the full
-		# path to the program be part of the function body.
 		if "${python}" -m venv -h > /dev/null ; then
 			typeset -gra _virtualz_venv_cmd=(command "${python}" -m venv)
 			echo "Using '${_virtualz_venv_cmd[*]}'" 1>&2
