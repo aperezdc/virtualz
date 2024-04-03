@@ -12,3 +12,10 @@ _exists <name>
 Checks whether a virtualenv “<name>” exists. The exit status is non-zero
 if the virtualenv is missing.
 
+_detect [--force]
+-----------------
+
+Try to determine which virtualenv command to use. If a suitable command was
+already configured, this command does nothing. The “--force” argument will
+cause detection to re-run nevertheless.
+

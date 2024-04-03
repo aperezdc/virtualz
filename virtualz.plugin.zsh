@@ -202,11 +202,45 @@ virtualz-help () {
 	fi
 }
 
-virtualz-venv () {
+virtualz-_detect () {
 	emulate -L zsh
 
-	# In general, a versioned command corresponding to Python 3 is preferred.
-	# Try to choose the most likely binary that gives us what we want:
+	# Is _virtualz-venv already defined? Note that passing
+	# -f/--force will remove the function and try anyway.
+	#
+	if [[ ${#_virtualz_venv_cmd[@]} -gt 0 ]] ; then
+		if [[ $# -eq 1 && ( $1 = -f || $1 = --force ) ]] ; then
+			typeset +r _virtualz_venv_cmd
+			unset _virtualz_venv_cmd
+		else
+			return
+		fi
+	fi
+
+	# Prefer to invoke virtualenv through the Python interpreter, now that
+	# recent versions include the module as part of the standard library
+	# even if there are no external commands.
+	#
+	local python
+	while read -r python ; do
+		# Check that we are really dealing with Python 3.x; this is needed
+		# in case we are checking an unversioned binary that may be older.
+		local python_version
+		python_version=$("${python}" -c 'import sys; sys.stdout.write(sys.version[0])')
+		[[ ${python_version} -ge 3 ]] || continue
+
+		# Define the helper function, this is eval'd to make the full
+		# path to the program be part of the function body.
+		if "${python}" -m venv -h > /dev/null ; then
+			typeset -gra _virtualz_venv_cmd=(command "${python}" -m venv)
+			echo "Using '${_virtualz_venv_cmd[*]}'" 1>&2
+			return
+		fi
+	done < <(builtin whence -p python3 python)
+
+	# Fallback to finding an external command. In general, a versioned
+	# command corresponding to Python 3 is preferred. Try to choose the most
+	# likely binary that gives us what we want:
 	#
 	#   - Many systems have versioned "virtualenv2" and/or "virtualenv3".
 	#   - A few systems have versioned "virtualenv-2" and/or "virtualenv-3".
@@ -229,13 +263,18 @@ virtualz-venv () {
 	for venv_cmd in "${try_venv[@]}" ; do
 		local venv_cmd_path=$(builtin whence -p "${venv_cmd}")
 		if [[ -x ${venv_cmd_path} ]] ; then
-			echo "Using virtualenv '${venv_cmd_path}'" 1>&2
-			local -i retval=0
-			"${venv_cmd_path}" "$@" || retval=$?
-			return ${retval}
+			typeset -gra _virtualz_venv_cmd=(command "${venv_cmd_path}")
+			echo "Using '${_virtualz_venv_cmd[*]}'" 1>&2
+			return
 		fi
 	done
 
-	echo 'No virtualenv command found.' 1>&2
-	return 1
+	echo 'No suitable virtualenv command found.' 1>&2
+	typeset -gra _virtualz_venv_cmd=(false)
+}
+
+virtualz-venv () {
+	emulate -L zsh
+	virtualz-_detect
+	"${_virtualz_venv_cmd[@]}" "$@"
 }
