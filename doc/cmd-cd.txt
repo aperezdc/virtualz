@@ -1,7 +1,7 @@
 Change to the directory of the active virtualenv
 Usage: vz cd
 
-  The "cd" command changes the current working directory of the shell to that
-  of the base directory of the currently active virtualenv. Using this command
-  is equivalent to issuing "cd ${VIRTUAL_ENV}" directly in the shell.
+The "cd" command changes the current working directory of the shell to that
+of the base directory of the currently active virtualenv. Using this command
+is equivalent to issuing "cd ${VIRTUAL_ENV}" directly in the shell.
 

@@ -1,6 +1,6 @@
 Delete a virtualenv
 Use: vz rm <virtualenv>
 
-  Removes a virtualenv given its name. Note that this command does not ask
-  for confirmation, and the removal is irreversible (there is no undo!).
+Removes a virtualenv given its name. Note that this command does not ask
+for confirmation, and the removal is irreversible (there is no undo!).
 

@@ -1,5 +1,5 @@
 List available virtualenvs
 Usage: vz ls
 
-  Lists the names of the virtualenvs available, one per line.
+Lists the names of the virtualenvs available, one per line.
 

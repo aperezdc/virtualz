@@ -2,3 +2,4 @@ Show the current virtualenv
 Usage: vz current
 
 Shows the name of the activated virtualenv.
+

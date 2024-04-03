@@ -1,7 +1,7 @@
 Activate a virtualenv
 Usage: vz activate <virtualenv>
 
-  Activates a virtualenv given its name. This will set the ${VIRTUAL_ENV}
-  and ${VIRTUAL_ENV_NAME} environment variables, and add the virtualenv
-  "bin/" subdirectory to the front of ${PATH}.
+Activates a virtualenv given its name. This will set the ${VIRTUAL_ENV}
+and ${VIRTUAL_ENV_NAME} environment variables, and add the virtualenv
+"bin/" subdirectory to the front of ${PATH}.
 
